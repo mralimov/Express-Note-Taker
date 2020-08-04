@@ -2,8 +2,9 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const uuidv1 = require('uuid/v1');
-const { request } = require('http');
+// const uuidv1 = require('uuid/v1');
+
+
 
 const app =  express();
 
@@ -11,9 +12,7 @@ const app =  express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-// Gett Request
+/* Gett Request*/
 app.get('/api/notes', (req, res) => {
   fs.readFile('db/db.json', 'utf8', function(err, contents) {
     var words = JSON.parse(contents);
@@ -69,3 +68,19 @@ app.post('/api/notes', (req, res) => {
     });
   
   })
+
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+  
+  app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'notes.html'));
+  });
+  
+  
+  // Set static folder to rtrieve css and js files
+  app.use(express.static(path.join(__dirname, 'public')));
+  
+  //PORT
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT);
