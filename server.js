@@ -44,3 +44,28 @@ app.post('/api/notes', (req, res) => {
       });
     });
   });
+
+//   Delete request
+  app.delete('/api/notes/:id', (req, res) => {
+
+    fs.readFile('db/db.json',(err, data) => {
+      // Check for error
+      if (err) throw err;
+      let deleteId = req.params.id;
+      // Handle data gathering for json update
+      let json = JSON.parse(data);
+      json.forEach((item, i) =>{
+        if (item.id.includes(deleteId)){ 
+          json.splice(i, 1);       
+        }
+      });
+  
+      // Write updated json to array 
+      fs.writeFile('db/db.json', JSON.stringify(json, null, 2), (err) => {
+        // Check for error
+        if (err) throw err;
+        res.send('200');
+      });
+    });
+  
+  })
